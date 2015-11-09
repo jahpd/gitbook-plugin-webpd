@@ -1,0 +1,8 @@
+{
+    "name": "gitbook-plugin-webpd",
+    "version": "0.0.1",
+    "description": "A webpd plugin for gitbooks",
+    "engines": {
+        "gitbook": ">1.x.x"
+    }
+}
