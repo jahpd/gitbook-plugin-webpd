@@ -13,7 +13,6 @@ module.exports = {
 	    process:  function (link) {
 		return "<script src=\"+"WEBPD_MASTER+"+\"></script>"
             }
-	}
-	    
+	}	    
     }
 };
