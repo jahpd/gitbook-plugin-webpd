@@ -8,7 +8,7 @@ module.exports = {
 		    + path 
 		    + '\', function(patchStr) { patch = Pd.loadPatch(patchStr); Pd.start()})</script>'
             }
-        }
+        },
 	import_webpd: {
 	    process:  function (link) {
 		return "<script src=\"+"WEBPD_MASTER+"+\"></script>"
