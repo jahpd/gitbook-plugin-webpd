@@ -1,5 +1,18 @@
 {
     "name": "gitbook-plugin-webpd",
+    "main": "index.js",
+    "version": "1.0.7",
+    "description": "Represent youtube videos inside a modal",
+    "keywords": [
+	"webpd",
+	"dsp",
+	"pd",
+	"gitbook"
+    ],
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/chudaol/gitbook-plugin-modal-youtube-video"
+    },
     "version": "0.0.1",
     "description": "A webpd plugin for gitbooks",
     "engines": {
