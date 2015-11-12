@@ -1,19 +1,19 @@
 {
-    "name": "gitbook-plugin-webpd",
-    "main": "index.js",
-    "description": "A webpd plugin for gitbooks",
-    "version": "0.0.21",
-    "keywords": [
-	"webpd",
-	"dsp",
-	"pd",
-	"gitbook"
-    ],
-    "repository": {
-	"type": "git",
-	"url": "https://github.com/jahpd/gitbook-plugin-webpd"
-    },
-    "engines": {
-        "gitbook": ">1.x.x"
-    }
+  "name": "gitbook-plugin-webpd",
+  "main": "index.js",
+  "description": "A webpd plugin for gitbooks",
+  "version": "0.0.22",
+  "keywords": [
+    "webpd",
+    "dsp",
+    "pd",
+    "gitbook"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jahpd/gitbook-plugin-webpd.git"
+  },
+  "engines": {
+    "gitbook": ">1.x.x"
+  }
 }
