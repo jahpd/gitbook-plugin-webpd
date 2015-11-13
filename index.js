@@ -32,7 +32,7 @@ var makeLines = function(options){
 	'',
 	'  window.pd_environment.'+options.name+' = function(fn){',
 	'    var url = \'\';',
-	'    if(window.location.origin == \"https:\/\/jahpd.github.io\/\"){',
+	'    if(window.location.origin == \"https:\/\/jahpd.gitbooks.io\"){',
 	'       url = window.location.origin+\'/gitbook/plugins/content/'+options.file+'\'',
 	'    }',
 	'    else {',
