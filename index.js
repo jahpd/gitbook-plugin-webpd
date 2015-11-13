@@ -19,7 +19,6 @@ var makeScriptInlineElement = function (lines) {
     try{
 	lines = lines.join("\n");
 	var tag =  "<script type=\"text/javascript\" charset=\"utf8\">"+lines+"\n  </script>\n";
-	log("-------------- script generated");
 	return tag;
     }
     catch(e){
@@ -27,19 +26,18 @@ var makeScriptInlineElement = function (lines) {
     }
 };
 
-var makeLines = function(path, name){
-    log("Server loaded: "+path)
-    log("-------------- "+name)
+var makeLines = function(options){
+    log("Server loaded: "+options.path);
     var array = [
 	'',
-	'  window.pd_environment._'+name+' = function(fn){',
-	'    var url = \''+ path +'\'',
+	'  window.pd_environment.'+options.varname+' = function(fn){',
+	'    var url = window.location.origin +\'/\'+\''+ options.path +'\'',
 	'    $.get(url, function(data){',
-	'      fn(\''+name+'\', data);',
+	'      fn(\''+options.varname+'\', data);',
 	'    });',
 	'  };'
     ];
-    log("-------------- script "+name+" generated");
+    log("-------------- script "+options.name+" generated");
     return array;
 }
 
@@ -47,18 +45,18 @@ var log = function(msg){
     console.log("<webpd says>: "+msg);
 }
 
-var makeContainer = function(name, lines){
-    var string = makeScriptInlineElement(lines);
-    var _id = 'pd_container_'+name
+var makeContainer = function(options){
+    var _id = 'pd_container'+options.varname
     var div = '<div class=\'pd_container\' id=\''+_id+'\' >\n'+
-	'  <code>'+name+'.pd</code>\n'+
-	'  <div id=\''+name+'\'></div>\n'+
-	'  '+string +
+	'  <code>['+options.name+'.pd \<</code>\n'+
+	'  <div id=\''+options.varname+'\'></div>\n'+
+	'  '+options.lines +
 	'</div>'
-    log('\n'+div);
     log("-------------- "+_id+" "+ "generated");
     return div;
 }
+
+var last = null;
 
 module.exports = {
     /* Configure PD assets*/
@@ -71,26 +69,33 @@ module.exports = {
 	],
 	/* Load patchs */
 	html: {
-	    'head:end': function(){
-		return makeScriptSrcElement("gitbook/plugins/gitbook-plugin-webpd/jquery-latest.min.js") + 
-		    makeScriptSrcElement("gitbook/plugins/gitbook-plugin-webpd/pd-environment.js")
-	    }
+	    'head:end': function(current){
+		var p = current.staticBase+"/plugins/gitbook-plugin-webpd/jquery-latest.min.js";
+		var d = current.staticBase+"/plugins/gitbook-plugin-webpd/pd-environment.js";		
+		return makeScriptSrcElement(p) + makeScriptSrcElement(d)
+	    }	
 	}
     },
     blocks: {
         patch: {
 	    process: function(current) {
 		console.log(current);
-		var name =  current.body.split(".pd")[0].toLowerCase()
+		var name =  current.body.split(".pd")[0]
+		var varname = "_"+current.body.split("/")[1]
+		varname = varname.split(".pd")[0]
 
-		// pd/ folder is where you MUST put pd patchs
-		// generally located in project's root
-		var p = 'gitbook/plugins/gitbook-plugin-webpd_porres_examples/'+current.body;
-		var lines = makeLines(p, name);
-		return makeContainer(name, lines);
+		console.log(name)
+		// current.body is a subplugin
+		options = {
+		    varname: varname,
+		    name:    name, 
+		    path:    "gitbook/plugins/gitbook-plugin-webpd_"+current.body
+		}
+		var lines = makeLines(options);
+		options.lines = makeScriptInlineElement(lines);
+		return makeContainer(options);
 		
 	    }
         }
     }
 };
-
