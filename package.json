@@ -2,7 +2,7 @@
   "name": "gitbook-plugin-webpd",
   "main": "index.js",
   "description": "A webpd plugin for gitbooks",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "keywords": [
     "webpd",
     "dsp",
