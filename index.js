@@ -30,10 +30,16 @@ var makeLines = function(options){
     log("Server loaded: "+options.path);
     var array = [
 	'',
-	'  window.pd_environment.'+options.varname+' = function(fn){',
-	'    var url = window.location.origin +\'/\'+\''+ options.path +'\'',
+	'  window.pd_environment.'+options.name+' = function(fn){',
+	'    var url = \'\';',
+	'    if(window.location.origin == \"https:\/\/jahpd.github.io\/\"){',
+	'       url = window.location.origin+\'/gitbook/plugins/content/'+options.file+'\'',
+	'    }',
+	'    else {',
+	'       url = window.location.origin+\'/gitbook/plugins/gitbook-plugin-webpd_'+options.folder+'/'+options.file+'\';',
+	'    }',
 	'    $.get(url, function(data){',
-	'      fn(\''+options.varname+'\', data);',
+	'      fn(\''+options.name+'\', data);',
 	'    });',
 	'  };'
     ];
@@ -46,10 +52,10 @@ var log = function(msg){
 }
 
 var makeContainer = function(options){
-    var _id = 'pd_container'+options.varname
+    var _id = 'pd_container'+options.name
     var div = '<div class=\'pd_container\' id=\''+_id+'\' >\n'+
-	'  <code>['+options.name+'.pd \<</code>\n'+
-	'  <div id=\''+options.varname+'\'></div>\n'+
+	'  <code>['+options.folder+"/"+options.name+'.pd \<</code>\n'+
+	'  <div id=\''+options.name+'\'></div>\n'+
 	'  '+options.lines +
 	'</div>'
     log("-------------- "+_id+" "+ "generated");
@@ -70,26 +76,29 @@ module.exports = {
 	/* Load patchs */
 	html: {
 	    'head:end': function(current){
-		var p = current.staticBase+"/plugins/gitbook-plugin-webpd/jquery-latest.min.js";
-		var d = current.staticBase+"/plugins/gitbook-plugin-webpd/pd-environment.js";		
-		return makeScriptSrcElement(p) + makeScriptSrcElement(d)
+		//console.log(this.book)
+		//book.variables.lasturl = current.staticBase
+		var p = current.staticBase + "/plugins/gitbook-plugin-webpd/jquery-latest.min.js";
+		var d = current.staticBase + "/plugins/gitbook-plugin-webpd/pd-environment.js";
+		p = makeScriptSrcElement(p)
+		d = makeScriptSrcElement(d)
+		return p + d
 	    }	
 	}
     },
     blocks: {
         patch: {
 	    process: function(current) {
-		console.log(current);
-		var name =  current.body.split(".pd")[0]
-		var varname = "_"+current.body.split("/")[1]
-		varname = varname.split(".pd")[0]
-
-		console.log(name)
-		// current.body is a subplugin
+		// current.body contains a subplugin
+		// <subplugin>/<patch>.pd
+		var file = current.body.split("/")[1]
+		var folder = current.body.split("/")[0]
+		var name = "_"+file.split(".pd")[0]
+		
 		options = {
-		    varname: varname,
-		    name:    name, 
-		    path:    "gitbook/plugins/gitbook-plugin-webpd_"+current.body
+		    name:    name,
+		    file:    file,
+		    folder:  folder
 		}
 		var lines = makeLines(options);
 		options.lines = makeScriptInlineElement(lines);
